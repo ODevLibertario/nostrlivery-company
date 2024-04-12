@@ -2,16 +2,16 @@ import React from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import PurpleButton from "./PurpleButton";
 import Toast from "react-native-toast-message";
-import { getPublicKey } from 'nostr-tools'
-import { finalizeEvent, verifyEvent, nip19 } from 'nostr-tools'
+import { finalizeEvent, nip19 } from 'nostr-tools'
+import {storage} from "../util/Storage";
 
 // @ts-ignore
 const LoginScreen = ({navigation}) => {
-  const [text, onChangeText] = React.useState('');
+  const [nsecInput, onChangeNsecInput] = React.useState('');
 
   const authenticate = () => {
     try {
-      let sk = nip19.decode(text)
+      let sk = nip19.decode(nsecInput)
 
       let event = finalizeEvent({
         kind: 1,
@@ -32,7 +32,19 @@ const LoginScreen = ({navigation}) => {
         body: JSON.stringify(event),
       }).then((response) => {
         if(response.ok) {
-          navigation.navigate('Profile')
+          response.json().then(profile => {
+            storage.save({
+              key: 'profile',
+              data: JSON.parse(profile["response"])
+            }).then()
+
+            storage.save({
+              key: 'nsec',
+              data: nsecInput
+            }).then()
+
+            navigation.navigate('Nostrlivery')
+          })
         } else {
           response.json().then(e => {
             Toast.show({
@@ -57,10 +69,17 @@ const LoginScreen = ({navigation}) => {
     }
   };
 
+  storage.load({key:"profile"}).then(data => {
+    if(data) {
+      navigation.navigate('Nostrlivery')
+    }
+  })
+
   return (
     <View style={styles.container}>
+      <Text style={{fontWeight: 'bold', fontSize: 20, marginBottom: '2%'}}>Login</Text>
       <Text style={styles.label}>Enter your nsec</Text>
-      <TextInput style={styles.input} onChangeText={onChangeText} />
+      <TextInput style={styles.input} onChangeText={onChangeNsecInput} />
       <PurpleButton title={"Enter"} onPress={authenticate}></PurpleButton>
     </View>
   );
@@ -69,7 +88,8 @@ const LoginScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
-    margin: '2%'
+    margin: '2%',
+    marginTop: '25%'
   },
   label: {
     marginBottom: 8,
