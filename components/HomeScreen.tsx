@@ -1,21 +1,23 @@
 import {Text} from "react-native";
 import React from "react";
-import {storage} from "../util/Storage";
-
+import {StorageService} from "../service/StorageService";
 
 //@ts-ignore
 export const HomeScreen = ({navigation, route}) => {
-    const [profile, setProfile] = React.useState({});
+    const [profile, setProfile] = React.useState<any>({});
+    const storageService = new StorageService()
 
 
-    storage.load({key:"profile"}).then(data => {
+    storageService.get('profile').then(data => {
         if(!data) {
             navigation.navigate('Login')
         }
         setProfile(data)
     })
 
-
-    return <Text>Hello, {(profile as any)['name']}</Text>;
-
+    if(profile) {
+        return (<Text>Hello, {profile['name']}</Text>);
+    } else {
+        return <></>
+    }
 };

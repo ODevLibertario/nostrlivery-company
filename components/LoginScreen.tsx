@@ -2,75 +2,39 @@ import React from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import PurpleButton from "./PurpleButton";
 import Toast from "react-native-toast-message";
-import { finalizeEvent, nip19 } from 'nostr-tools'
-import {storage} from "../util/Storage";
+import {NostrService} from "../service/NostrService";
+import {NodeService} from "../service/NodeService";
+import {StorageService} from "../service/StorageService";
 
 // @ts-ignore
 const LoginScreen = ({navigation}) => {
   const [nsecInput, onChangeNsecInput] = React.useState('');
+  const nostrService = new NostrService()
+  const nodeService = new NodeService()
+  const storageService = new StorageService()
 
-  const authenticate = () => {
-    try {
-      let sk = nip19.decode(nsecInput)
-
-      let event = finalizeEvent({
-        kind: 1,
-        created_at: Math.floor(Date.now() / 1000),
-        tags: [],
-        content: JSON.stringify({
-          eventType: 'LOGIN',
-          params: {profile: 'company'}
-        }),
-      }, sk.data as Uint8Array)
-
-      fetch('http://localhost:3000/entrypoint', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(event),
-      }).then((response) => {
-        if(response.ok) {
-          response.json().then(profile => {
-            storage.save({
-              key: 'profile',
-              data: JSON.parse(profile["response"])
-            }).then()
-
-            storage.save({
-              key: 'nsec',
-              data: nsecInput
-            }).then()
-
-            navigation.navigate('Nostrlivery')
-          })
-        } else {
-          response.json().then(e => {
-            Toast.show({
-              type: 'error',
-              text1: e['error']
-            });
-          })
-
-        }
-
+  const authenticate = async () => {
+      let loginEvent = nostrService.signNostrliveryEvent(nsecInput, 'LOGIN', {})
+      nodeService.postEvent(loginEvent).then(response => {
+        storageService.set('profile', JSON.parse(response)).then()
+        storageService.set('nsec', nsecInput).then()
+        navigation.navigate('Nostrlivery')
       }).catch((error) => {
         Toast.show({
           type: 'error',
-          text1: error.message
+          text1: 'Failed to login'
         })
-      });
-    } catch (error: any) {
-      Toast.show({
-        type: 'error',
-        text1: error.message
       })
-    }
   };
 
-  storage.load({key:"profile"}).then(data => {
-    if(data) {
+  storageService.areValuesPresent("nodeNpub").then(isPresent => {
+    if(!isPresent) {
+      navigation.navigate('NodeSelectionScreen')
+    }
+  })
+
+  storageService.areValuesPresent("profile").then(isPresent => {
+    if(isPresent) {
       navigation.navigate('Nostrlivery')
     }
   })
