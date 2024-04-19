@@ -1,11 +1,24 @@
-import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import React, { useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 import { StorageService } from "../service/StorageService";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import PurpleButton from "./PurpleButton";
+import { NodeService } from "../service/NodeService";
+import Toast from "react-native-toast-message";
 
 // @ts-ignore
 export const ProfileScreen = ({ navigation, route }) => {
   const [profile, setProfile] = React.useState<any>({});
+  const [nodeUrl, setNodeUrl] = React.useState<string>("");
+  const [disabledNodeUrlBtn, setDisabledNodeUrlBtn] =
+    React.useState<boolean>(true);
   const storageService = new StorageService();
 
   storageService.get("profile").then((data) => {
@@ -15,8 +28,47 @@ export const ProfileScreen = ({ navigation, route }) => {
     setProfile(data);
   });
 
+  useEffect(() => {
+    storageService.get("nodeUrl").then((data) => {
+      if (!data) {
+        navigation.navigate("NodeSelectionScreen");
+      }
+      setNodeUrl(data);
+    });
+  }, []);
+
+  useEffect(() => {
+    storageService.get("nodeUrl").then((data) => {
+      if (nodeUrl !== data && nodeUrl !== "") {
+        setDisabledNodeUrlBtn(false);
+      } else {
+        setDisabledNodeUrlBtn(true);
+      }
+    });
+  }, [nodeUrl]);
+
   function navigateToHome() {
     navigation.navigate("Home");
+  }
+
+  function handleSaveNodeUrl() {
+    const nodeService = new NodeService();
+
+    nodeService
+      .getNodeIdentity(nodeUrl)
+      .then((_) => {
+        setDisabledNodeUrlBtn(true);
+        Toast.show({
+          type: "success",
+          text1: "Node url saved",
+        });
+      })
+      .catch((e) => {
+        Toast.show({
+          type: "error",
+          text1: e,
+        });
+      });
   }
 
   return (
@@ -50,6 +102,19 @@ export const ProfileScreen = ({ navigation, route }) => {
           </View>
         </View>
       </View>
+      <View>
+        <Text style={{ fontSize: 16 }}>Node Url</Text>
+        <TextInput
+          style={styles.input}
+          value={nodeUrl}
+          onChangeText={setNodeUrl}
+        />
+        <PurpleButton
+          disabled={disabledNodeUrlBtn}
+          title={"Save"}
+          onPress={handleSaveNodeUrl}
+        />
+      </View>
     </View>
   );
 };
@@ -58,13 +123,14 @@ const styles = StyleSheet.create({
   profileContainer: {
     display: "flex",
     flexDirection: "column",
-    padding: 10,
+    padding: 20,
     paddingTop: 25,
+    gap: 15,
   },
   basicInfoContainer: {
     display: "flex",
     flexDirection: "row",
-    margin: 10,
+    marginTop: 10,
     gap: 10,
   },
   nameInfo: {
@@ -81,6 +147,14 @@ const styles = StyleSheet.create({
   closeBtn: {
     position: "absolute",
     top: 2,
-    right: 20,
+    right: 10,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    fontSize: 16,
+    marginBottom: "2%",
   },
 });
