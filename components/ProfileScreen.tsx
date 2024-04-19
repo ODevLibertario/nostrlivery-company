@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { StorageService } from "../service/StorageService";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 // @ts-ignore
 export const ProfileScreen = ({ navigation, route }) => {
@@ -14,11 +15,18 @@ export const ProfileScreen = ({ navigation, route }) => {
     setProfile(data);
   });
 
+  function navigateToHome() {
+    navigation.navigate("Home");
+  }
+
   return (
     <View style={styles.profileContainer}>
+      <TouchableOpacity style={styles.closeBtn} onPress={navigateToHome}>
+        <MaterialCommunityIcons name="close" color={"#000"} size={35} />
+      </TouchableOpacity>
       <View style={styles.basicInfoContainer}>
         <View style={styles.nameInfo}>
-          <Text style={{ fontWeight: "700", fontSize: 25 }}>
+          <Text style={{ fontWeight: "500", fontSize: 30 }}>
             {profile["display_name"]}
           </Text>
           <Text style={{ fontSize: 15, marginBottom: 10 }}>
@@ -51,6 +59,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     padding: 10,
+    paddingTop: 25,
   },
   basicInfoContainer: {
     display: "flex",
@@ -61,10 +70,17 @@ const styles = StyleSheet.create({
   nameInfo: {
     display: "flex",
     flexGrow: 3,
+    justifyContent: "center",
   },
   profilePicContainer: {
     display: "flex",
     alignItems: "flex-end",
     alignContent: "flex-end",
+    paddingTop: 8,
+  },
+  closeBtn: {
+    position: "absolute",
+    top: 2,
+    right: 20,
   },
 });
