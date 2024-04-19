@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
+// @ts-ignore
 const PurpleButton = ({ onPress, title, disabled = false }) => {
   return (
     <TouchableOpacity
