@@ -12,6 +12,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import PurpleButton from "./PurpleButton";
 import { NodeService } from "../service/NodeService";
 import Toast from "react-native-toast-message";
+import RedButton from "./RedButton";
 
 // @ts-ignore
 export const ProfileScreen = ({ navigation, route }) => {
@@ -71,6 +72,12 @@ export const ProfileScreen = ({ navigation, route }) => {
       });
   }
 
+  function handleLogout() {
+    storageService.remove("profile");
+    storageService.remove("nsec");
+    navigation.navigate("Login");
+  }
+
   return (
     <View style={styles.profileContainer}>
       <TouchableOpacity style={styles.closeBtn} onPress={navigateToHome}>
@@ -114,6 +121,10 @@ export const ProfileScreen = ({ navigation, route }) => {
           title={"Save"}
           onPress={handleSaveNodeUrl}
         />
+      </View>
+      <View>
+        <Text style={{ fontSize: 16 }}>Session</Text>
+        <RedButton title={"Logout"} onPress={handleLogout} />
       </View>
     </View>
   );

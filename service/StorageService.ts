@@ -15,6 +15,12 @@ export class StorageService {
         })
     }
 
+    async remove(key: string) {
+        await storage.remove({
+            key: key
+        })
+    }
+
     async areValuesPresent(...keys: string[]) {
         for (const key of keys) {
             let value = await this.get(key)
