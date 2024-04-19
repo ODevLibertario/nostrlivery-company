@@ -41,7 +41,20 @@ export default function App() {
 
 function HomeTabs() {
   return (
-    <Tab.Navigator initialRouteName="Home">
+    <Tab.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        tabBarStyle: {
+          height: 80,
+          paddingBottom: 20,
+        },
+        tabBarActiveTintColor: "#2f1650",
+        tabBarInactiveTintColor: "#a8a8a8",
+        tabBarLabelStyle: {
+          fontSize: 14,
+        },
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
