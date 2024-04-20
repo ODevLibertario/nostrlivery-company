@@ -10,6 +10,7 @@ import { HomeScreen } from "./components/HomeScreen";
 import NodeSelectionScreen from "./components/NodeSelectionScreen";
 import { ProfileScreen } from "./components/ProfileScreen";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -41,7 +42,20 @@ export default function App() {
 
 function HomeTabs() {
   return (
-    <Tab.Navigator initialRouteName="Home">
+    <Tab.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        tabBarStyle: {
+          height: 80,
+          paddingBottom: 20,
+        },
+        tabBarActiveTintColor: "#2f1650",
+        tabBarInactiveTintColor: "#a8a8a8",
+        tabBarLabelStyle: {
+          fontSize: 14,
+        },
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
@@ -56,7 +70,7 @@ function HomeTabs() {
         component={HomeScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="car-side" color={color} size={size} />
+            <FontAwesome name="motorcycle" color={color} size={size} />
           ),
         }}
       />
