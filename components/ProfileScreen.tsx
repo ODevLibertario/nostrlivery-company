@@ -1,171 +1,171 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react"
 import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
-import { StorageService } from "../service/StorageService";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { NodeService } from "../service/NodeService";
-import Toast from "react-native-toast-message";
-import ActionButton from "./ActionButton";
+    View,
+    Text,
+    StyleSheet,
+    Image,
+    TouchableOpacity,
+    TextInput,
+} from "react-native"
+import {StorageService} from "../service/StorageService"
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
+import {NodeService} from "../service/NodeService"
+import Toast from "react-native-toast-message"
+import ActionButton from "./ActionButton"
 
 // @ts-ignore
-export const ProfileScreen = ({ navigation, route }) => {
-  const [profile, setProfile] = React.useState<any>({});
-  const [nodeUrl, setNodeUrl] = React.useState<string>("");
-  const [disabledNodeUrlBtn, setDisabledNodeUrlBtn] =
-    React.useState<boolean>(true);
-  const storageService = new StorageService();
+export const ProfileScreen = ({navigation, route}) => {
+    const [profile, setProfile] = React.useState<any>({})
+    const [nodeUrl, setNodeUrl] = React.useState<string>("")
+    const [disabledNodeUrlBtn, setDisabledNodeUrlBtn] =
+        React.useState<boolean>(true)
+    const storageService = new StorageService()
 
-  storageService.get("profile").then((data) => {
-    if (!data) {
-      navigation.navigate("Login");
+    storageService.get("profile").then((data) => {
+        if (!data) {
+            navigation.navigate("Login")
+        }
+        setProfile(data)
+    })
+
+    useEffect(() => {
+        storageService.get("nodeUrl").then((data) => {
+            if (!data) {
+                navigation.navigate("NodeSelectionScreen")
+            }
+            setNodeUrl(data)
+        })
+    }, [])
+
+    useEffect(() => {
+        storageService.get("nodeUrl").then((data) => {
+            if (nodeUrl !== data && nodeUrl !== "") {
+                setDisabledNodeUrlBtn(false)
+            } else {
+                setDisabledNodeUrlBtn(true)
+            }
+        })
+    }, [nodeUrl])
+
+    function navigateToHome() {
+        navigation.navigate("Home")
     }
-    setProfile(data);
-  });
 
-  useEffect(() => {
-    storageService.get("nodeUrl").then((data) => {
-      if (!data) {
-        navigation.navigate("NodeSelectionScreen");
-      }
-      setNodeUrl(data);
-    });
-  }, []);
+    function handleSaveNodeUrl() {
+        const nodeService = new NodeService()
 
-  useEffect(() => {
-    storageService.get("nodeUrl").then((data) => {
-      if (nodeUrl !== data && nodeUrl !== "") {
-        setDisabledNodeUrlBtn(false);
-      } else {
-        setDisabledNodeUrlBtn(true);
-      }
-    });
-  }, [nodeUrl]);
+        nodeService
+            .getNodeIdentity(nodeUrl)
+            .then((_) => {
+                setDisabledNodeUrlBtn(true)
+                Toast.show({
+                    type: "success",
+                    text1: "Node url saved",
+                })
+            })
+            .catch((e) => {
+                Toast.show({
+                    type: "error",
+                    text1: e,
+                })
+            })
+    }
 
-  function navigateToHome() {
-    navigation.navigate("Home");
-  }
+    function handleLogout() {
+        storageService.remove("profile")
+        storageService.remove("nsec")
+        navigation.navigate("Login")
+    }
 
-  function handleSaveNodeUrl() {
-    const nodeService = new NodeService();
-
-    nodeService
-      .getNodeIdentity(nodeUrl)
-      .then((_) => {
-        setDisabledNodeUrlBtn(true);
-        Toast.show({
-          type: "success",
-          text1: "Node url saved",
-        });
-      })
-      .catch((e) => {
-        Toast.show({
-          type: "error",
-          text1: e,
-        });
-      });
-  }
-
-  function handleLogout() {
-    storageService.remove("profile");
-    storageService.remove("nsec");
-    navigation.navigate("Login");
-  }
-
-  return (
-    <View style={styles.profileContainer}>
-      <TouchableOpacity style={styles.closeBtn} onPress={navigateToHome}>
-        <MaterialCommunityIcons name="close" color={"#000"} size={35} />
-      </TouchableOpacity>
-      <View style={styles.basicInfoContainer}>
-        <View style={styles.nameInfo}>
-          <Text style={{ fontWeight: "500", fontSize: 30 }}>
-            {profile["display_name"]}
-          </Text>
-          <Text style={{ fontSize: 15, marginBottom: 10 }}>
-            @{profile["name"]}
-          </Text>
+    return (
+        <View style={styles.profileContainer}>
+            <TouchableOpacity style={styles.closeBtn} onPress={navigateToHome}>
+                <MaterialCommunityIcons name="close" color={"#000"} size={35}/>
+            </TouchableOpacity>
+            <View style={styles.basicInfoContainer}>
+                <View style={styles.nameInfo}>
+                    <Text style={{fontWeight: "500", fontSize: 30}}>
+                        {profile.display_name}
+                    </Text>
+                    <Text style={{fontSize: 15, marginBottom: 10}}>
+                        @{profile.name}
+                    </Text>
+                </View>
+                <View style={styles.profilePicContainer}>
+                    <View style={{width: 80, height: 80}}>
+                        <Image
+                            style={{
+                                borderRadius: 40,
+                                width: 80,
+                                height: 80,
+                                padding: 0,
+                            }}
+                            source={{
+                                uri: profile.picture,
+                            }}
+                            alt="profile_picture"
+                        />
+                    </View>
+                </View>
+            </View>
+            <View>
+                <Text style={{fontSize: 16}}>Node Url</Text>
+                <TextInput
+                    style={styles.input}
+                    value={nodeUrl}
+                    onChangeText={setNodeUrl}
+                />
+                <ActionButton
+                    disabled={disabledNodeUrlBtn}
+                    title={"Save"}
+                    color={"purple"}
+                    onPress={handleSaveNodeUrl}
+                />
+            </View>
+            <View>
+                <Text style={{fontSize: 16}}>Session</Text>
+                <ActionButton title={"Logout"} color={"red"} onPress={handleLogout}/>
+            </View>
         </View>
-        <View style={styles.profilePicContainer}>
-          <View style={{ width: 80, height: 80 }}>
-            <Image
-              style={{
-                borderRadius: 40,
-                width: 80,
-                height: 80,
-                padding: 0,
-              }}
-              source={{
-                uri: profile["picture"],
-              }}
-              alt="profile_picture"
-            />
-          </View>
-        </View>
-      </View>
-      <View>
-        <Text style={{ fontSize: 16 }}>Node Url</Text>
-        <TextInput
-          style={styles.input}
-          value={nodeUrl}
-          onChangeText={setNodeUrl}
-        />
-        <ActionButton
-          disabled={disabledNodeUrlBtn}
-          title={"Save"}
-          color={"purple"}
-          onPress={handleSaveNodeUrl}
-        />
-      </View>
-      <View>
-        <Text style={{ fontSize: 16 }}>Session</Text>
-        <ActionButton title={"Logout"} color={"red"} onPress={handleLogout} />
-      </View>
-    </View>
-  );
-};
+    )
+}
 
 const styles = StyleSheet.create({
-  profileContainer: {
-    display: "flex",
-    flexDirection: "column",
-    padding: 20,
-    paddingTop: 25,
-    gap: 15,
-  },
-  basicInfoContainer: {
-    display: "flex",
-    flexDirection: "row",
-    marginTop: 10,
-    gap: 10,
-  },
-  nameInfo: {
-    display: "flex",
-    flexGrow: 3,
-    justifyContent: "center",
-  },
-  profilePicContainer: {
-    display: "flex",
-    alignItems: "flex-end",
-    alignContent: "flex-end",
-    paddingTop: 8,
-  },
-  closeBtn: {
-    position: "absolute",
-    top: 2,
-    right: 10,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    fontSize: 16,
-    marginBottom: "2%",
-  },
-});
+    profileContainer: {
+        display: "flex",
+        flexDirection: "column",
+        padding: 20,
+        paddingTop: 25,
+        gap: 15,
+    },
+    basicInfoContainer: {
+        display: "flex",
+        flexDirection: "row",
+        marginTop: 10,
+        gap: 10,
+    },
+    nameInfo: {
+        display: "flex",
+        flexGrow: 3,
+        justifyContent: "center",
+    },
+    profilePicContainer: {
+        display: "flex",
+        alignItems: "flex-end",
+        alignContent: "flex-end",
+        paddingTop: 8,
+    },
+    closeBtn: {
+        position: "absolute",
+        top: 2,
+        right: 10,
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 5,
+        padding: 10,
+        fontSize: 16,
+        marginBottom: "2%",
+    },
+})

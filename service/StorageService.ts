@@ -1,30 +1,30 @@
-import Storage from 'react-native-storage';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Storage from 'react-native-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export class StorageService {
     async set(key: string, value: any) {
         await storage.save({
-            key: key,
+            key,
             data: value
         })
     }
 
     async get(key: string) {
         return await storage.load({
-            key: key
+            key
         })
     }
 
     async remove(key: string) {
         await storage.remove({
-            key: key
+            key
         })
     }
 
     async areValuesPresent(...keys: string[]) {
         for (const key of keys) {
-            let value = await this.get(key)
-            if(!value || value == '' ) {
+            const value = await this.get(key)
+            if (!value || value === '') {
                 return false
             }
         }
@@ -41,4 +41,4 @@ const storage = new Storage({
     // expire time, default: 1 day (1000 * 3600 * 24 milliseconds).
     // can be null, which means never expire.
     defaultExpires: 1000 * 3600 * 24,
-});
+})

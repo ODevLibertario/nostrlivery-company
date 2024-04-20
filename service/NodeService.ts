@@ -1,10 +1,10 @@
-import {StorageService} from "./StorageService";
-import {NostrEvent} from "../model/NostrEvent";
-import {verifyEvent} from "nostr-tools";
+import {StorageService} from "./StorageService"
+import {NostrEvent} from "../model/NostrEvent"
+import {verifyEvent} from "nostr-tools"
 
 export class NodeService {
 
-    private storageService = new StorageService()
+    private readonly storageService = new StorageService()
 
     async getNodeIdentity(nodeUrl: string) {
         const response = await fetch(nodeUrl+'/identity', {
@@ -26,7 +26,7 @@ export class NodeService {
     }
 
     async postEvent(event: NostrEvent) {
-        let nodeUrl = await this.storageService.get('nodeUrl')
+        const nodeUrl = await this.storageService.get('nodeUrl')
 
         const response = await fetch(nodeUrl+'/entrypoint', {
             method: 'POST',
@@ -38,7 +38,7 @@ export class NodeService {
         })
 
         if(response.ok) {
-            let responseEvent = await response.json()
+            const responseEvent = await response.json()
             const responseNostrEvent = new NostrEvent(responseEvent)
 
             if(verifyEvent(responseNostrEvent)) {

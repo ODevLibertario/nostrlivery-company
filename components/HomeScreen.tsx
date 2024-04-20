@@ -1,12 +1,11 @@
-import {Text} from "react-native";
-import React from "react";
-import {StorageService} from "../service/StorageService";
+import {Text} from "react-native"
+import React from "react"
+import {StorageService} from "../service/StorageService"
 
-//@ts-ignore
+// @ts-ignore
 export const HomeScreen = ({navigation, route}) => {
-    const [profile, setProfile] = React.useState<any>({});
+    const [profile, setProfile] = React.useState<any>({})
     const storageService = new StorageService()
-
 
     storageService.get('profile').then(data => {
         if(!data) {
@@ -16,8 +15,8 @@ export const HomeScreen = ({navigation, route}) => {
     })
 
     if(profile) {
-        return (<Text>Hello, {profile['name']}</Text>);
+        return (<Text>Hello, {profile.name}</Text>)
     } else {
         return <></>
     }
-};
+}

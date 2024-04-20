@@ -2,5 +2,12 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true
-  }
+  },
+  // Add the "include" array below
+  // Inside the array, specify files you want ESLint to check
+  "include": [
+    "./**/*",
+    "./*",
+    ".eslintrc.js"
+  ]
 }
