@@ -9,10 +9,9 @@ import {
 } from "react-native";
 import { StorageService } from "../service/StorageService";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import PurpleButton from "./PurpleButton";
 import { NodeService } from "../service/NodeService";
 import Toast from "react-native-toast-message";
-import RedButton from "./RedButton";
+import ActionButton from "./ActionButton";
 
 // @ts-ignore
 export const ProfileScreen = ({ navigation, route }) => {
@@ -116,15 +115,16 @@ export const ProfileScreen = ({ navigation, route }) => {
           value={nodeUrl}
           onChangeText={setNodeUrl}
         />
-        <PurpleButton
+        <ActionButton
           disabled={disabledNodeUrlBtn}
           title={"Save"}
+          color={"purple"}
           onPress={handleSaveNodeUrl}
         />
       </View>
       <View>
         <Text style={{ fontSize: 16 }}>Session</Text>
-        <RedButton title={"Logout"} onPress={handleLogout} />
+        <ActionButton title={"Logout"} color={"red"} onPress={handleLogout} />
       </View>
     </View>
   );
