@@ -1,4 +1,4 @@
-import {StorageService} from "./StorageService"
+import {StorageService, StoredKey} from "./StorageService"
 import {NostrEvent} from "../model/NostrEvent"
 import {verifyEvent} from "nostr-tools"
 
@@ -17,8 +17,8 @@ export class NodeService {
 
         if(response.ok) {
             const nodeNpub = await response.text()
-            await this.storageService.set('nodeNpub', nodeNpub)
-            await this.storageService.set('nodeUrl', nodeUrl)
+            await this.storageService.set(StoredKey.NODE_NPUB, nodeNpub)
+            await this.storageService.set(StoredKey.NODE_URL, nodeUrl)
             return true
         } else {
             throw 'Invalid node url'
@@ -26,7 +26,7 @@ export class NodeService {
     }
 
     async postEvent(event: NostrEvent) {
-        const nodeUrl = await this.storageService.get('nodeUrl')
+        const nodeUrl = await this.storageService.get(StoredKey.NODE_URL)
 
         const response = await fetch(nodeUrl+'/entrypoint', {
             method: 'POST',

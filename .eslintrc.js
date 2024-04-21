@@ -45,11 +45,8 @@ module.exports = {
         'eol-last': 'off',
         'no-multiple-empty-lines': 'error',
         semi: ['error', 'never'],
-        // Indent with 2 spaces
         indent: ['error', 4],
-        // Indent JSX with 2 spaces
         'react/jsx-indent': ['error', 4],
-        // Indent props with 2 spaces
         'react/jsx-indent-props': ['error', 4]
     }
 }

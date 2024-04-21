@@ -1,27 +1,34 @@
 import Storage from 'react-native-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
+export enum StoredKey {
+    PROFILE = "profile",
+    NSEC = "nsec",
+    NODE_NPUB = "nodeNpub",
+    NODE_URL = "nodeUrl"
+}
+
 export class StorageService {
-    async set(key: string, value: any) {
+    async set(key: StoredKey, value: any) {
         await storage.save({
             key,
             data: value
         })
     }
 
-    async get(key: string) {
+    async get(key: StoredKey) {
         return await storage.load({
             key
         })
     }
 
-    async remove(key: string) {
+    async remove(key: StoredKey) {
         await storage.remove({
             key
         })
     }
 
-    async areValuesPresent(...keys: string[]) {
+    async areValuesPresent(...keys: StoredKey[]) {
         for (const key of keys) {
             const value = await this.get(key)
             if (!value || value === '') {

@@ -3,7 +3,7 @@ import {StyleSheet, Text, TextInput, View} from "react-native"
 import Toast from "react-native-toast-message"
 import {NostrService} from "../service/NostrService"
 import {NodeService} from "../service/NodeService"
-import {StorageService} from "../service/StorageService"
+import {StorageService, StoredKey} from "../service/StorageService"
 import ActionButton from "./ActionButton"
 
 // @ts-ignore
@@ -18,8 +18,8 @@ const LoginScreen = ({navigation}) => {
         nodeService
             .postEvent(loginEvent)
             .then((response) => {
-                storageService.set("profile", JSON.parse(response)).then()
-                storageService.set("nsec", nsecInput).then()
+                storageService.set(StoredKey.PROFILE,  JSON.parse(response)).then()
+                storageService.set(StoredKey.NSEC, nsecInput).then()
                 navigation.navigate("Nostrlivery")
             })
             .catch((error) => {
@@ -30,17 +30,17 @@ const LoginScreen = ({navigation}) => {
             })
     }
 
-    storageService.areValuesPresent("nodeNpub").then((isPresent) => {
+    storageService.areValuesPresent(StoredKey.NODE_NPUB).then((isPresent) => {
         if (!isPresent) {
             navigation.navigate("NodeSelectionScreen")
         }
     })
 
-    storageService.areValuesPresent("profile").then((isPresent) => {
+    storageService.areValuesPresent(StoredKey.PROFILE).then((isPresent) => {
         if (isPresent) {
             navigation.navigate("Nostrlivery")
         }
-    })
+    }).catch(e => {console.log(e)})
 
     return (
         <View style={styles.container}>
@@ -48,7 +48,7 @@ const LoginScreen = ({navigation}) => {
                 Login
             </Text>
             <Text style={styles.label}>Enter your nsec</Text>
-            <TextInput style={styles.input} onChangeText={onChangeNsecInput}/>
+            <TextInput style={styles.input} onChangeText={onChangeNsecInput} secureTextEntry={true}/>
             <ActionButton title={"Enter"} color={"purple"} onPress={authenticate}/>
         </View>
     )
