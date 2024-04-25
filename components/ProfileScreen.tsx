@@ -7,6 +7,7 @@ import Toast from "react-native-toast-message"
 import ActionButton from "./ActionButton"
 import {NostrService} from "../service/NostrService"
 import {isValidLatitude, isValidLongitude} from "../util/validationUtils"
+import { getLocation } from "../util/geolocation"
 
 // @ts-ignore
 export const ProfileScreen = ({navigation, route}) => {
@@ -36,6 +37,12 @@ export const ProfileScreen = ({navigation, route}) => {
             setProfile(data)
             setLongitude(data.location.longitude)
             setLatitude(data.location.latitude)
+        })
+        getLocation().then(location => {
+            const {latitude, longitude} = location.coords;
+
+            setLatitude(latitude.toString())
+            setLongitude(longitude.toString())
         })
     }, [])
 
