@@ -38,12 +38,6 @@ export const ProfileScreen = ({navigation, route}) => {
             setLongitude(data.location.longitude)
             setLatitude(data.location.latitude)
         })
-        getLocation().then(location => {
-            const {latitude, longitude} = location.coords;
-
-            setLatitude(latitude.toString())
-            setLongitude(longitude.toString())
-        })
     }, [])
 
     useEffect(() => {
@@ -55,6 +49,17 @@ export const ProfileScreen = ({navigation, route}) => {
             }
         })
     }, [nodeUrl])
+
+    function handleAutofillLocation() {
+        getLocation().then(location => {
+            if(location?.coords) {
+                const {latitude, longitude} = location?.coords
+
+                setLatitude(latitude.toString())
+                setLongitude(longitude.toString())
+            }
+        })
+    }
 
     function navigateToHome() {
         navigation.navigate("Home")
@@ -175,6 +180,7 @@ export const ProfileScreen = ({navigation, route}) => {
             </View>
             <View>
                 <Text style={{fontSize: 16, marginBottom: "2%"}}>Location</Text>
+                <ActionButton title={"Autofill Location"} color={"purple"} onPress={handleAutofillLocation}/>
                 <Text style={{fontSize: 16}}>Latitude</Text>
                 <TextInput
                     style={styles.input}
