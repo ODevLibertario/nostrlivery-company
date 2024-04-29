@@ -1,5 +1,5 @@
 import React, {useEffect} from "react"
-import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View,} from "react-native"
+import {Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View,} from "react-native"
 import {StorageService, StoredKey} from "../service/StorageService"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import {NodeService} from "../service/NodeService"
@@ -180,7 +180,7 @@ export const ProfileScreen = ({navigation, route}) => {
             </View>
             <View>
                 <Text style={{fontSize: 16, marginBottom: "2%"}}>Location</Text>
-                <ActionButton title={"Autofill Location"} color={"purple"} onPress={handleAutofillLocation}/>
+                {Platform.OS === 'android' && <ActionButton title={"Autofill Location"} color={"purple"} onPress={handleAutofillLocation}/>}
                 <Text style={{fontSize: 16}}>Latitude</Text>
                 <TextInput
                     style={styles.input}

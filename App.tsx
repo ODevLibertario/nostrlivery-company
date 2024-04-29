@@ -11,6 +11,7 @@ import NodeSelectionScreen from "./components/NodeSelectionScreen"
 import {ProfileScreen} from "./components/ProfileScreen"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
+import {MenuScreen} from "./components/MenuScreen"
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -60,6 +61,7 @@ function HomeTabs() {
                 name="Home"
                 component={HomeScreen}
                 options={{
+
                     tabBarIcon: ({color, size}) => (
                         <MaterialCommunityIcons name="home" color={color} size={size}/>
                     ),
@@ -92,6 +94,9 @@ function HomeTabs() {
                     ),
                 }}
             />
+            <Tab.Screen name="Menu" component={MenuScreen} options={{
+                tabBarButton: () => null
+            }}/>
         </Tab.Navigator>
     )
 }

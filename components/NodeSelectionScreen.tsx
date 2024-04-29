@@ -2,7 +2,7 @@ import React from "react"
 import {StyleSheet, Text, TextInput, View} from "react-native"
 import Toast from "react-native-toast-message"
 import {NodeService} from "../service/NodeService"
-import {StorageService} from "../service/StorageService"
+import {StorageService, StoredKey} from "../service/StorageService"
 import ActionButton from "./ActionButton"
 
 // @ts-ignore
@@ -25,7 +25,7 @@ const NodeSelectionScreen = ({navigation}) => {
     }
 
     storageService
-        .areValuesPresent("nodeNpub", "nodeUrl")
+        .areValuesPresent(StoredKey.NODE_NPUB, StoredKey.NODE_URL)
         .then((result) => {
             if (result) {
                 navigation.navigate("Login")
