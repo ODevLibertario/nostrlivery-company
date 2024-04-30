@@ -1,13 +1,12 @@
 import React from "react"
 import {StyleSheet, Text, TextInput, View} from "react-native"
 import Toast from "react-native-toast-message"
-import {NostrService} from "../service/NostrService"
-import {NodeService} from "../service/NodeService"
-import {StorageService, StoredKey} from "../service/StorageService"
-import ActionButton from "./ActionButton"
+import {NostrService} from "../../service/NostrService"
+import {NodeService} from "../../service/NodeService"
+import {StorageService, StoredKey} from "../../service/StorageService"
+import { ActionButton } from "../../components/ActionButton"
 
-// @ts-ignore
-const LoginScreen = ({navigation}) => {
+export const LoginScreen = ({ navigation}: any) => {
     const [nsecInput, onChangeNsecInput] = React.useState("")
     const nostrService = new NostrService()
     const nodeService = new NodeService()
@@ -22,7 +21,7 @@ const LoginScreen = ({navigation}) => {
                 storageService.set(StoredKey.NSEC, nsecInput).then()
                 navigation.navigate("Nostrlivery")
             })
-            .catch((error) => {
+            .catch(() => {
                 Toast.show({
                     type: "error",
                     text1: "Failed to login",
@@ -73,5 +72,3 @@ const styles = StyleSheet.create({
         marginBottom: "2%",
     },
 })
-
-export default LoginScreen

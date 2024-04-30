@@ -1,23 +1,21 @@
-import React, {useEffect} from "react"
+import { useEffect, useState } from "react"
 import {Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View,} from "react-native"
-import {StorageService, StoredKey} from "../service/StorageService"
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import {NodeService} from "../service/NodeService"
 import Toast from "react-native-toast-message"
-import ActionButton from "./ActionButton"
-import {NostrService} from "../service/NostrService"
-import {isValidLatitude, isValidLongitude} from "../util/validationUtils"
-import { getLocation } from "../util/geolocation"
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 
-// @ts-ignore
-export const ProfileScreen = ({navigation, route}) => {
-    const [profile, setProfile] = React.useState<any>({})
-    const [nodeUrl, setNodeUrl] = React.useState<string>("")
-    const [latitude, setLatitude] = React.useState<string>("")
-    const [longitude, setLongitude] = React.useState<string>("")
+import { ActionButton } from "../../components/ActionButton"
+import { StorageService, StoredKey } from "../../service/StorageService"
+import { NodeService } from "../../service/NodeService"
+import {NostrService} from "../../service/NostrService"
+import { isValidLatitude, isValidLongitude } from "../../util/validationUtils"
+import { getLocation } from "../../util/geolocation"
 
-    const [disabledNodeUrlBtn, setDisabledNodeUrlBtn] =
-        React.useState<boolean>(true)
+export const ProfileScreen = ({ navigation }: any) => {
+    const [profile, setProfile] = useState<any>({})
+    const [nodeUrl, setNodeUrl] = useState<string>("")
+    const [latitude, setLatitude] = useState<string>("")
+    const [longitude, setLongitude] = useState<string>("")
+    const [disabledNodeUrlBtn, setDisabledNodeUrlBtn] = useState<boolean>(true)
     const storageService = new StorageService()
     const nodeService = new NodeService()
     const nostrService = new NostrService()
