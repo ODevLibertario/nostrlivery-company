@@ -17,9 +17,9 @@ export const getLocation: () => Promise<GeolocationPosition | undefined> = async
             navigator.geolocation.getCurrentPosition(position => {
                 resolve(position)
             },
-                error => {
-                    reject(error)
-                })
+            error => {
+                reject(error)
+            })
         })
     }
 }
