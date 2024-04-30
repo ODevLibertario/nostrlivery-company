@@ -1,14 +1,21 @@
-import {StyleSheet, Text, TouchableOpacity} from "react-native"
+import { type GestureResponderEvent, StyleSheet, Text, TouchableOpacity } from "react-native"
 
-// @ts-ignore
-const ActionButton = ({onPress, title, color, disabled = false, customStyle = {}}) => {
+interface Props {
+    onPress: () => void
+    title: string
+    color: string
+    disabled?: boolean
+    customStyle?: any
+}
+
+export const ActionButton = ({ onPress, title, color, disabled = false, customStyle = {} }: Props) => {
     return (
         <TouchableOpacity
             disabled={disabled}
             style={
                 disabled
-                    ? {...customStyle, ...styles.button, backgroundColor: "#c8c8c8"}
-                    : {...customStyle, ...styles.button, backgroundColor: color}
+                    ? { ...customStyle, ...styles.button, backgroundColor: "#c8c8c8" }
+                    : { ...customStyle, ...styles.button, backgroundColor: color }
             }
             onPress={onPress}
         >
@@ -30,5 +37,3 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
 })
-
-export default ActionButton

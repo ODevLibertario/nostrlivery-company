@@ -1,13 +1,12 @@
 import React from "react"
-import {StyleSheet, Text, TextInput, View} from "react-native"
+import { StyleSheet, Text, TextInput, View } from "react-native"
 import Toast from "react-native-toast-message"
-import {NostrService} from "../service/NostrService"
-import {NodeService} from "../service/NodeService"
-import {StorageService, StoredKey} from "../service/StorageService"
-import ActionButton from "./ActionButton"
+import { NostrService } from "../../service/NostrService"
+import { NodeService } from "../../service/NodeService"
+import { StorageService, StoredKey } from "../../service/StorageService"
+import { ActionButton } from "../../components/ActionButton"
 
-// @ts-ignore
-const LoginScreen = ({navigation}) => {
+export const LoginScreen = ({ navigation }: any) => {
     const [nsecInput, onChangeNsecInput] = React.useState("")
     const nostrService = new NostrService()
     const nodeService = new NodeService()
@@ -18,11 +17,11 @@ const LoginScreen = ({navigation}) => {
         nodeService
             .postEvent(loginEvent)
             .then((response) => {
-                storageService.set(StoredKey.PROFILE,  JSON.parse(response)).then()
+                storageService.set(StoredKey.PROFILE, JSON.parse(response)).then()
                 storageService.set(StoredKey.NSEC, nsecInput).then()
                 navigation.navigate("Nostrlivery")
             })
-            .catch((error) => {
+            .catch(() => {
                 Toast.show({
                     type: "error",
                     text1: "Failed to login",
@@ -40,16 +39,16 @@ const LoginScreen = ({navigation}) => {
         if (isPresent) {
             navigation.navigate("Nostrlivery")
         }
-    }).catch(e => {console.log(e)})
+    }).catch(e => { console.log(e) })
 
     return (
         <View style={styles.container}>
-            <Text style={{fontWeight: "bold", fontSize: 20, marginBottom: "2%"}}>
+            <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: "2%" }}>
                 Login
             </Text>
             <Text style={styles.label}>Enter your nsec</Text>
-            <TextInput style={styles.input} onChangeText={onChangeNsecInput} secureTextEntry={true}/>
-            <ActionButton title={"Enter"} color={"purple"} onPress={authenticate}/>
+            <TextInput style={styles.input} onChangeText={onChangeNsecInput} secureTextEntry={true} />
+            <ActionButton title={"Enter"} color={"purple"} onPress={authenticate} />
         </View>
     )
 }
@@ -73,5 +72,3 @@ const styles = StyleSheet.create({
         marginBottom: "2%",
     },
 })
-
-export default LoginScreen

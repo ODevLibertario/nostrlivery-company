@@ -1,4 +1,4 @@
-import {finalizeEvent, nip19} from "nostr-tools"
+import { finalizeEvent, nip19 } from "nostr-tools"
 
 export class NostrService {
 
@@ -14,7 +14,7 @@ export class NostrService {
                     params
                 }),
             }, sk.data as Uint8Array)
-        }catch (e) {
+        } catch (e) {
             console.log(e)
             throw e
         }
@@ -29,7 +29,7 @@ export class NostrService {
                 tags,
                 content: JSON.stringify(content),
             }, sk.data as Uint8Array)
-        }catch (e) {
+        } catch (e) {
             console.log(e)
             throw e
         }

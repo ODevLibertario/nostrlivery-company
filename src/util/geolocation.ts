@@ -11,16 +11,15 @@ const requestLocationPermission = async () => {
 
 export const getLocation: () => Promise<GeolocationPosition | undefined> = async () => {
     const granted = await requestLocationPermission()
-    
-    if(granted) {
+
+    if (granted) {
         return await new Promise((resolve, reject) => {
             navigator.geolocation.getCurrentPosition(position => {
                 resolve(position)
             },
-            error => {
-                reject(error)
-            }
-            )
+                error => {
+                    reject(error)
+                })
         })
     }
 }
