@@ -1,14 +1,14 @@
 import {StyleSheet, Text, TouchableOpacity} from "react-native"
 
 // @ts-ignore
-const ActionButton = ({onPress, title, color, disabled = false}) => {
+const ActionButton = ({onPress, title, color, disabled = false, customStyle = {}}) => {
     return (
         <TouchableOpacity
             disabled={disabled}
             style={
                 disabled
-                    ? {...styles.button, backgroundColor: "#c8c8c8"}
-                    : {...styles.button, backgroundColor: color}
+                    ? {...customStyle, ...styles.button, backgroundColor: "#c8c8c8"}
+                    : {...customStyle, ...styles.button, backgroundColor: color}
             }
             onPress={onPress}
         >

@@ -12,6 +12,7 @@ import {ProfileScreen} from "./components/ProfileScreen"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import {MenuScreen} from "./components/MenuScreen"
+import {MenuItemScreen} from "./components/MenuItemScreen"
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -95,6 +96,9 @@ function HomeTabs() {
                 }}
             />
             <Tab.Screen name="Menu" component={MenuScreen} options={{
+                tabBarButton: () => null
+            }}/>
+            <Tab.Screen name="Menu Item" component={MenuItemScreen} options={{
                 tabBarButton: () => null
             }}/>
         </Tab.Navigator>
