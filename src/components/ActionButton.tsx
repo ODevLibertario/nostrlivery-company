@@ -1,11 +1,11 @@
 import { type GestureResponderEvent, StyleSheet, Text, TouchableOpacity } from "react-native"
 
 interface Props {
-    onPress: (event: GestureResponderEvent) => void
+    onPress: () => void
     title: string
     color: string
     disabled?: boolean
-    customStyle: any
+    customStyle?: any
 }
 
 export const ActionButton = ({ onPress, title, color, disabled = false, customStyle = {} }: Props) => {

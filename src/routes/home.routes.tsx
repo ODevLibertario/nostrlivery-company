@@ -29,8 +29,8 @@ export function HomeRoutes() {
                 component={HomeScreen}
                 options={{
 
-                    tabBarIcon: ({color, size}) => (
-                        <MaterialCommunityIcons name="home" color={color} size={size}/>
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="home" color={color} size={size} />
                     ),
                 }}
             />
@@ -38,8 +38,8 @@ export function HomeRoutes() {
                 name="Drivers"
                 component={HomeScreen}
                 options={{
-                    tabBarIcon: ({color, size}) => (
-                        <FontAwesome name="motorcycle" color={color} size={size}/>
+                    tabBarIcon: ({ color, size }) => (
+                        <FontAwesome name="motorcycle" color={color} size={size} />
                     ),
                 }}
             />
@@ -47,8 +47,8 @@ export function HomeRoutes() {
                 name="Orders"
                 component={HomeScreen}
                 options={{
-                    tabBarIcon: ({color, size}) => (
-                        <MaterialCommunityIcons name="cart" color={color} size={size}/>
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="cart" color={color} size={size} />
                     ),
                 }}
             />
@@ -56,14 +56,14 @@ export function HomeRoutes() {
                 name="Profile"
                 component={ProfileScreen}
                 options={{
-                    tabBarIcon: ({color, size}) => (
-                        <MaterialCommunityIcons name="account" color={color} size={size}/>
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="account" color={color} size={size} />
                     ),
                 }}
             />
             <Screen name="Menu" component={MenuScreen} options={{
                 tabBarButton: () => null
-            }}/>
+            }} />
         </Navigator>
     )
 }

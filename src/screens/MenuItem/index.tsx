@@ -1,21 +1,20 @@
 import React from "react"
-import ActionButton from "./ActionButton"
-import {View} from "react-native"
+import { ActionButton } from "../../components/ActionButton"
+import { View } from "react-native"
 import { TextInput } from 'react-native-paper'
 
 const addItem = async () => {
 
 }
 
-// @ts-ignore
-export const MenuItemScreen = ({navigation, route}) => {
+export const MenuItemScreen = ({ navigation, route }: any) => {
     const [name, setName] = React.useState("")
     const [description, setDescription] = React.useState("")
     const [price, setPrice] = React.useState("")
     const [image, setImage] = React.useState("")
     const [categories, setCategories] = React.useState("")
 
-    return <View style={{margin: '2%'}}>
+    return <View style={{ margin: '2%' }}>
         <TextInput
             label="Name"
             value={name}
@@ -45,7 +44,7 @@ export const MenuItemScreen = ({navigation, route}) => {
         />
 
         {/* TODO what is the best way to do validation */}
-        <ActionButton title={"Save"} color={"purple"} onPress={addItem} customStyle={{margin: '2%'}}/>
-        <ActionButton title={"Cancel"} color={"red"} onPress={addItem} customStyle={{margin: '2%'}}/>
+        <ActionButton title={"Save"} color={"purple"} onPress={addItem} customStyle={{ margin: '2%' }} />
+        <ActionButton title={"Cancel"} color={"red"} onPress={addItem} customStyle={{ margin: '2%' }} />
     </View>
 }

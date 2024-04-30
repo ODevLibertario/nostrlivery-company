@@ -20,7 +20,7 @@ export function AppRoutes() {
                 name="NodeSelection"
                 component={NodeSelectionScreen}
             />
-            <Screen name="Login" component={LoginScreen}/>
+            <Screen name="Login" component={LoginScreen} />
             <Screen name="Nostrlivery" component={HomeRoutes} />
         </Navigator>
     )
