@@ -7,7 +7,7 @@ export default function App() {
     return (
         <>
             <Routes />
-            <Toast position="bottom"/>
+            <Toast position="bottom" />
         </>
     )
 }
