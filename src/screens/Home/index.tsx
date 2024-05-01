@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { StorageService, StoredKey } from "../../service/StorageService"
+import { StorageService, StoredKey } from "@service/StorageService"
 import { Card } from "react-native-paper"
 
 export const HomeScreen = ({ navigation }: any) => {

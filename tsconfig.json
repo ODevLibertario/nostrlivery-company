@@ -1,7 +1,16 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@assets/*": ["src/assets/*"],
+      "@components/*": ["src/components/*"],
+      "@model/*": ["src/model/*"],
+      "@screens/*": ["src/screens/*"],
+      "@service/*": ["src/service/*"],
+      "@util/*": ["src/util/*"],
+    }
   },
   // Add the "include" array below
   // Inside the array, specify files you want ESLint to check
@@ -9,5 +18,8 @@
     "./**/*",
     "./*",
     ".eslintrc.js"
+  ],
+  "exclude": [
+      "node_modules",
   ]
 }

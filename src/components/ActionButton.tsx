@@ -1,4 +1,4 @@
-import { type GestureResponderEvent, StyleSheet, Text, TouchableOpacity } from "react-native"
+import { StyleSheet, Text, TouchableOpacity } from "react-native"
 
 interface Props {
     onPress: () => void
