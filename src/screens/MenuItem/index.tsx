@@ -1,14 +1,13 @@
 import React from "react"
-import ActionButton from "./ActionButton"
 import {View} from "react-native"
 import { TextInput } from 'react-native-paper'
+import {ActionButton} from "../../components/ActionButton"
 
 const addItem = async () => {
 
 }
 
-// @ts-ignore
-export const MenuItemScreen = ({navigation, route}) => {
+export const MenuItem = ({ navigation }: any) => {
     const [name, setName] = React.useState("")
     const [description, setDescription] = React.useState("")
     const [price, setPrice] = React.useState("")

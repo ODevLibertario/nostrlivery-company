@@ -1,23 +1,21 @@
-import React, {useEffect} from "react"
-import {Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View,} from "react-native"
-import {StorageService, StoredKey} from "../service/StorageService"
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import {NodeService} from "../service/NodeService"
+import { useEffect, useState } from "react"
+import { Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, } from "react-native"
 import Toast from "react-native-toast-message"
-import ActionButton from "./ActionButton"
-import {NostrService} from "../service/NostrService"
-import {isValidLatitude, isValidLongitude} from "../util/validationUtils"
-import { getLocation } from "../util/geolocation"
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 
-// @ts-ignore
-export const ProfileScreen = ({navigation, route}) => {
-    const [profile, setProfile] = React.useState<any>({})
-    const [nodeUrl, setNodeUrl] = React.useState<string>("")
-    const [latitude, setLatitude] = React.useState<string>("")
-    const [longitude, setLongitude] = React.useState<string>("")
+import { ActionButton } from "../../components/ActionButton"
+import { StorageService, StoredKey } from "../../service/StorageService"
+import { NodeService } from "../../service/NodeService"
+import { NostrService } from "../../service/NostrService"
+import { isValidLatitude, isValidLongitude } from "../../util/validationUtils"
+import { getLocation } from "../../util/geolocation"
 
-    const [disabledNodeUrlBtn, setDisabledNodeUrlBtn] =
-        React.useState<boolean>(true)
+export const ProfileScreen = ({ navigation }: any) => {
+    const [profile, setProfile] = useState<any>({})
+    const [nodeUrl, setNodeUrl] = useState<string>("")
+    const [latitude, setLatitude] = useState<string>("")
+    const [longitude, setLongitude] = useState<string>("")
+    const [disabledNodeUrlBtn, setDisabledNodeUrlBtn] = useState<boolean>(true)
     const storageService = new StorageService()
     const nodeService = new NodeService()
     const nostrService = new NostrService()
@@ -52,8 +50,8 @@ export const ProfileScreen = ({navigation, route}) => {
 
     function handleAutofillLocation() {
         getLocation().then(location => {
-            if(location?.coords) {
-                const {latitude, longitude} = location?.coords
+            if (location?.coords) {
+                const { latitude, longitude } = location?.coords
 
                 setLatitude(latitude.toString())
                 setLongitude(longitude.toString())
@@ -86,7 +84,7 @@ export const ProfileScreen = ({navigation, route}) => {
     }
 
     function handleUpdateLocation() {
-        if(!isValidLatitude(latitude)) {
+        if (!isValidLatitude(latitude)) {
             Toast.show({
                 type: "error",
                 text1: "Invalid latitude",
@@ -94,7 +92,7 @@ export const ProfileScreen = ({navigation, route}) => {
             return
         }
 
-        if(!isValidLongitude(longitude)) {
+        if (!isValidLongitude(longitude)) {
             Toast.show({
                 type: "error",
                 text1: "Invalid longitude",
@@ -102,11 +100,11 @@ export const ProfileScreen = ({navigation, route}) => {
             return
         }
 
-        const profileWithLocation = {...profile, location: { latitude, longitude}}
+        const profileWithLocation = { ...profile, location: { latitude, longitude } }
 
         storageService.get(StoredKey.NSEC).then(async nsec => {
             const profileUpdateEvent = nostrService.signNostrEvent(nsec, 0, [], profileWithLocation)
-            const event = nostrService.signNostrliveryEvent(nsec, "PUBLISH_EVENT", {event: profileUpdateEvent})
+            const event = nostrService.signNostrliveryEvent(nsec, "PUBLISH_EVENT", { event: profileUpdateEvent })
 
             try {
                 await nodeService.postEvent(event)
@@ -136,19 +134,19 @@ export const ProfileScreen = ({navigation, route}) => {
     return (
         <View style={styles.profileContainer}>
             <TouchableOpacity style={styles.closeBtn} onPress={navigateToHome}>
-                <MaterialCommunityIcons name="close" color={"#000"} size={35}/>
+                <MaterialCommunityIcons name="close" color={"#000"} size={35} />
             </TouchableOpacity>
             <View style={styles.basicInfoContainer}>
                 <View style={styles.nameInfo}>
-                    <Text style={{fontWeight: "500", fontSize: 30}}>
+                    <Text style={{ fontWeight: "500", fontSize: 30 }}>
                         {profile.display_name}
                     </Text>
-                    <Text style={{fontSize: 15, marginBottom: 10}}>
+                    <Text style={{ fontSize: 15, marginBottom: 10 }}>
                         @{profile.name}
                     </Text>
                 </View>
                 <View style={styles.profilePicContainer}>
-                    <View style={{width: 80, height: 80}}>
+                    <View style={{ width: 80, height: 80 }}>
                         <Image
                             style={{
                                 borderRadius: 40,
@@ -165,7 +163,7 @@ export const ProfileScreen = ({navigation, route}) => {
                 </View>
             </View>
             <View>
-                <Text style={{fontSize: 16}}>Node Url</Text>
+                <Text style={{ fontSize: 16 }}>Node Url</Text>
                 <TextInput
                     style={styles.input}
                     value={nodeUrl}
@@ -179,16 +177,16 @@ export const ProfileScreen = ({navigation, route}) => {
                 />
             </View>
             <View>
-                <Text style={{fontSize: 16, marginBottom: "2%"}}>Location</Text>
-                {Platform.OS === 'android' && <ActionButton title={"Autofill Location"} color={"purple"} onPress={handleAutofillLocation}/>}
-                <Text style={{fontSize: 16}}>Latitude</Text>
+                <Text style={{ fontSize: 16, marginBottom: "2%" }}>Location</Text>
+                {Platform.OS === 'android' && <ActionButton title={"Autofill Location"} color={"purple"} onPress={handleAutofillLocation} />}
+                <Text style={{ fontSize: 16 }}>Latitude</Text>
                 <TextInput
                     style={styles.input}
                     value={latitude}
                     keyboardType={"numeric"}
                     onChangeText={setLatitude}
                 />
-                <Text style={{fontSize: 16}}>Longitude</Text>
+                <Text style={{ fontSize: 16 }}>Longitude</Text>
                 <TextInput
                     style={styles.input}
                     value={longitude}
@@ -201,8 +199,8 @@ export const ProfileScreen = ({navigation, route}) => {
                 />
             </View>
             <View>
-                <Text style={{fontSize: 16}}>Session</Text>
-                <ActionButton title={"Logout"} color={"red"} onPress={handleLogout}/>
+                <Text style={{ fontSize: 16 }}>Session</Text>
+                <ActionButton title={"Logout"} color={"red"} onPress={handleLogout} />
             </View>
         </View>
     )

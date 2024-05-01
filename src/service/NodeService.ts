@@ -1,13 +1,13 @@
-import {StorageService, StoredKey} from "./StorageService"
-import {NostrEvent} from "../model/NostrEvent"
-import {verifyEvent} from "nostr-tools"
+import { StorageService, StoredKey } from "./StorageService"
+import { NostrEvent } from "../model/NostrEvent"
+import { verifyEvent } from "nostr-tools"
 
 export class NodeService {
 
     private readonly storageService = new StorageService()
 
     async getNodeIdentity(nodeUrl: string) {
-        const response = await fetch(nodeUrl+'/identity', {
+        const response = await fetch(nodeUrl + '/identity', {
             method: 'GET',
             headers: {
                 Accept: 'text/plain',
@@ -15,7 +15,7 @@ export class NodeService {
             }
         })
 
-        if(response.ok) {
+        if (response.ok) {
             const nodeNpub = await response.text()
             await this.storageService.set(StoredKey.NODE_NPUB, nodeNpub)
             await this.storageService.set(StoredKey.NODE_URL, nodeUrl)
@@ -28,7 +28,7 @@ export class NodeService {
     async postEvent(event: NostrEvent) {
         const nodeUrl = await this.storageService.get(StoredKey.NODE_URL)
 
-        const response = await fetch(nodeUrl+'/entrypoint', {
+        const response = await fetch(nodeUrl + '/entrypoint', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -37,11 +37,11 @@ export class NodeService {
             body: JSON.stringify(event),
         })
 
-        if(response.ok) {
+        if (response.ok) {
             const responseEvent = await response.json()
             const responseNostrEvent = new NostrEvent(responseEvent)
 
-            if(verifyEvent(responseNostrEvent)) {
+            if (verifyEvent(responseNostrEvent)) {
                 return JSON.parse(responseNostrEvent.content)
             }
         } else {

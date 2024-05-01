@@ -1,13 +1,12 @@
-import React from "react"
-import {StyleSheet, Text, TextInput, View} from "react-native"
+import { useState } from "react"
+import { StyleSheet, Text, TextInput, View } from "react-native"
 import Toast from "react-native-toast-message"
-import {NodeService} from "../service/NodeService"
-import {StorageService, StoredKey} from "../service/StorageService"
-import ActionButton from "./ActionButton"
+import { NodeService } from "../../service/NodeService"
+import { StorageService, StoredKey } from "../../service/StorageService"
+import { ActionButton } from "../../components/ActionButton"
 
-// @ts-ignore
-const NodeSelectionScreen = ({navigation}) => {
-    const [nodeUrl, onChangeNodeUrl] = React.useState("")
+export const NodeSelectionScreen = ({ navigation }: any) => {
+    const [nodeUrl, onChangeNodeUrl] = useState("")
 
     const nodeService = new NodeService()
     const storageService = new StorageService()
@@ -15,7 +14,7 @@ const NodeSelectionScreen = ({navigation}) => {
     const selectNode = () => {
         nodeService
             .getNodeIdentity(nodeUrl)
-            .then((result) => navigation.navigate("Login"))
+            .then(() => navigation.navigate("Login"))
             .catch((e) => {
                 Toast.show({
                     type: "error",
@@ -35,14 +34,14 @@ const NodeSelectionScreen = ({navigation}) => {
 
     return (
         <View style={styles.container}>
-            <Text style={{fontWeight: "bold", fontSize: 20, marginBottom: "2%"}}>
+            <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: "2%" }}>
                 Node Selection
             </Text>
             <Text style={styles.label}>
                 Enter your Nostrlivery node URL with schema (http:// or https://)
             </Text>
-            <TextInput style={styles.input} onChangeText={onChangeNodeUrl}/>
-            <ActionButton title={"Enter"} color={"purple"} onPress={selectNode}/>
+            <TextInput style={styles.input} onChangeText={onChangeNodeUrl} />
+            <ActionButton title={"Enter"} color={"purple"} onPress={selectNode} />
         </View>
     )
 }
@@ -66,5 +65,3 @@ const styles = StyleSheet.create({
         marginBottom: "2%",
     },
 })
-
-export default NodeSelectionScreen
