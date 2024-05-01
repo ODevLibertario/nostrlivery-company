@@ -5,6 +5,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { HomeScreen } from "../screens/Home"
 import { MenuScreen } from "../screens/Menu"
 import { ProfileScreen } from "../screens/Profile"
+import { MenuItem } from "../screens/MenuItem"
 
 const { Navigator, Screen } = createBottomTabNavigator()
 
@@ -62,6 +63,9 @@ export function HomeRoutes() {
                 }}
             />
             <Screen name="Menu" component={MenuScreen} options={{
+                tabBarButton: () => null
+            }} />
+            <Screen name="Menu Item" component={MenuItem} options={{
                 tabBarButton: () => null
             }} />
         </Navigator>
