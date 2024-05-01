@@ -16,7 +16,7 @@ export const HomeScreen = ({ navigation }: any) => {
     if (profile) {
         return (
             <Card style={{ margin: '2%', maxHeight: 140 }} onPress={() => navigation.navigate("Menu")}>
-                <Card.Cover source={require('../../assets/menu-header.jpg')} style={{ maxHeight: 100 }} />
+                <Card.Cover source={require('@assets/menu-header.jpg')} style={{ maxHeight: 100 }} />
                 <Card.Title title="Menu" titleStyle={{ alignSelf: 'flex-end', fontWeight: 'bold' }} />
             </Card>
         )
