@@ -1,50 +1,52 @@
 import React from "react"
 import {View} from "react-native"
-import { TextInput } from 'react-native-paper'
 import {ActionButton} from "@components/ActionButton"
+import {useForm} from "react-hook-form"
+import {FormTextInput} from "@components/FormTextInput"
 
-const addItem = async () => {
-
+const addItem = async (values: any) => {
+    console.log(values)
 }
 
+const cancel = async () => {
+
+}
 export const MenuItem = ({ navigation }: any) => {
-    const [name, setName] = React.useState("")
-    const [description, setDescription] = React.useState("")
-    const [price, setPrice] = React.useState("")
-    const [image, setImage] = React.useState("")
-    const [categories, setCategories] = React.useState("")
+    const form = useForm()
+
+    console.log(form.formState.errors)
 
     return <View style={{margin: '2%'}}>
-        <TextInput
+        <FormTextInput
             label="Name"
-            value={name}
-            onChangeText={text => setName(text)}
+            control={form.control}
+            rules={{minLength: 1, required: true}}
         />
-        <TextInput
+        <FormTextInput
             label="Description"
-            value={description}
-            onChangeText={text => setDescription(text)}
+            control={form.control}
+            rules={{minLength: 1, required: true}}
         />
-        <TextInput
+        <FormTextInput
             label="Price"
-            value={price}
-            onChangeText={text => setPrice(text)}
+            control={form.control}
+            rules={{minLength: 1, required: true}}
         />
         {/* TODO allow image upload from gallery */}
-        <TextInput
+        <FormTextInput
             label="Image"
-            value={image}
-            onChangeText={text => setImage(text)}
+            control={form.control}
+            rules={{minLength: 1, required: true}}
         />
         {/* TODO This needs to be a list input where the user presses enter and it adds to a list */}
-        <TextInput
+        <FormTextInput
             label="Categories"
-            value={categories}
-            onChangeText={text => setCategories(text)}
+            control={form.control}
+            rules={{minLength: 1, required: true}}
         />
 
         {/* TODO what is the best way to do validation */}
-        <ActionButton title={"Save"} color={"purple"} onPress={addItem} customStyle={{margin: '2%'}}/>
-        <ActionButton title={"Cancel"} color={"red"} onPress={addItem} customStyle={{margin: '2%'}}/>
+        <ActionButton title={"Save"} color={"purple"} onPress={form.handleSubmit(addItem)} customStyle={{margin: '2%'}}/>
+        <ActionButton title={"Cancel"} color={"red"} onPress={cancel} customStyle={{margin: '2%'}}/>
     </View>
 }
