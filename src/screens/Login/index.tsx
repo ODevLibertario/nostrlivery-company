@@ -1,10 +1,10 @@
 import React from "react"
 import { StyleSheet, Text, TextInput, View } from "react-native"
 import Toast from "react-native-toast-message"
-import { NostrService } from "../../service/NostrService"
-import { NodeService } from "../../service/NodeService"
-import { StorageService, StoredKey } from "../../service/StorageService"
-import { ActionButton } from "../../components/ActionButton"
+import { NostrService } from "@service/NostrService"
+import { NodeService } from "@service/NodeService"
+import { StorageService, StoredKey } from "@service/StorageService"
+import { ActionButton } from "@components/ActionButton"
 
 export const LoginScreen = ({ navigation }: any) => {
     const [nsecInput, onChangeNsecInput] = React.useState("")

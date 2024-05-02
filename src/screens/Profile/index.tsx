@@ -3,12 +3,12 @@ import { Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, }
 import Toast from "react-native-toast-message"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 
-import { ActionButton } from "../../components/ActionButton"
-import { StorageService, StoredKey } from "../../service/StorageService"
-import { NodeService } from "../../service/NodeService"
-import { NostrService } from "../../service/NostrService"
-import { isValidLatitude, isValidLongitude } from "../../util/validationUtils"
-import { getLocation } from "../../util/geolocation"
+import { ActionButton } from "@components/ActionButton"
+import { StorageService, StoredKey } from "@service/StorageService"
+import { NodeService } from "@service/NodeService"
+import { NostrService } from "@service/NostrService"
+import { isValidLatitude, isValidLongitude } from "@util/validationUtils"
+import { getLocation } from "@util/geolocation"
 
 export const ProfileScreen = ({ navigation }: any) => {
     const [profile, setProfile] = useState<any>({})

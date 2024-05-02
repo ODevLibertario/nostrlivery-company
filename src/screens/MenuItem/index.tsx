@@ -1,7 +1,7 @@
 import React from "react"
 import {View} from "react-native"
 import { TextInput } from 'react-native-paper'
-import {ActionButton} from "../../components/ActionButton"
+import {ActionButton} from "@components/ActionButton"
 
 const addItem = async () => {
 

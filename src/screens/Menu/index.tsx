@@ -1,5 +1,5 @@
 import React from "react"
-import { ActionButton } from "../../components/ActionButton"
+import { ActionButton } from "@components/ActionButton"
 import { View } from "react-native"
 
 export const MenuScreen = ({ navigation }: any) => {
