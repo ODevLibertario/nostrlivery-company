@@ -3,16 +3,23 @@ import {ActionButton} from "@components/ActionButton"
 import {Image, View} from "react-native"
 import {StorageService, StoredKey} from "@service/StorageService"
 import {List} from "react-native-paper"
+import {useFocus} from "@util/navigationUtils";
+
+
 
 export const MenuScreen = ({navigation}: any) => {
     const storageService = new StorageService()
     const [menu, setMenu] = useState<any>([])
+    const {focusCount, isFocused} = useFocus();
 
     useEffect(() => {
-        storageService.get(StoredKey.MENU).then((menu) => {
-            setMenu(menu)
-        })
-    }, [menu])
+        // Is coming from navigation
+        if (focusCount > 1 && isFocused) {
+            storageService.get(StoredKey.MENU).then((menu) => {
+                setMenu(menu)
+            })
+        }
+    });
 
     return (
         <View style={{margin: '2%'}}>

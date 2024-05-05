@@ -23,6 +23,7 @@ export const MenuItem = ({navigation}: any) => {
             kinds: [30000],
             authors: [getPublicKey(nip19.decode(nsec).data as Uint8Array)]
         })
+
         let menuUpdateEvent
         if (isEmpty(menu)) {
             menu = [menuItem]
