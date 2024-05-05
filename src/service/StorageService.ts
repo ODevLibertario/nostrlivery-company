@@ -5,7 +5,8 @@ export enum StoredKey {
     PROFILE = "profile",
     NSEC = "nsec",
     NODE_NPUB = "nodeNpub",
-    NODE_URL = "nodeUrl"
+    NODE_URL = "nodeUrl",
+    MENU = "menu"
 }
 
 export class StorageService {

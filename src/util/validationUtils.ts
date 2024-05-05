@@ -8,3 +8,7 @@ export function isValidLatitude(latitude: string) {
 export function isValidLongitude(longitude: string) {
     return regexLon.test(longitude)
 }
+
+export function isEmpty(obj: any) {
+    return Object.keys(obj).length === 0
+}

@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const FormTextInput = ({ label, control, rules }: Props) => {
-    const controller = useController({name: label, control: control, rules: rules})
+    const controller = useController({name: label, control: control, rules: rules, defaultValue: undefined})
     return (
         <TextInput
             label={label}

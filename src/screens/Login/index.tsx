@@ -1,32 +1,30 @@
 import React from "react"
-import { StyleSheet, Text, TextInput, View } from "react-native"
+import {StyleSheet, Text, TextInput, View} from "react-native"
 import Toast from "react-native-toast-message"
-import { NostrService } from "@service/NostrService"
-import { NodeService } from "@service/NodeService"
-import { StorageService, StoredKey } from "@service/StorageService"
-import { ActionButton } from "@components/ActionButton"
+import {NodeService} from "@service/NodeService"
+import {StorageService, StoredKey} from "@service/StorageService"
+import {ActionButton} from "@components/ActionButton"
+import {getPublicKey, nip19} from "nostr-tools"
+import {isEmpty} from "@util/validationUtils"
 
 export const LoginScreen = ({ navigation }: any) => {
     const [nsecInput, onChangeNsecInput] = React.useState("")
-    const nostrService = new NostrService()
     const nodeService = new NodeService()
     const storageService = new StorageService()
 
     const authenticate = async () => {
-        const loginEvent = nostrService.signNostrliveryEvent(nsecInput, "LOGIN", {})
-        nodeService
-            .postEvent(loginEvent)
-            .then((response) => {
-                storageService.set(StoredKey.PROFILE, JSON.parse(response)).then()
-                storageService.set(StoredKey.NSEC, nsecInput).then()
-                navigation.navigate("Nostrlivery")
+        const profile = await nodeService.queryEvent({kinds:[0], authors: [getPublicKey(nip19.decode(nsecInput).data as Uint8Array)]})
+
+        if(!isEmpty(profile)){
+            storageService.set(StoredKey.PROFILE, profile).then()
+            storageService.set(StoredKey.NSEC, nsecInput).then()
+            navigation.navigate("Nostrlivery")
+        } else {
+            Toast.show({
+                type: "error",
+                text1: "Failed to login",
             })
-            .catch(() => {
-                Toast.show({
-                    type: "error",
-                    text1: "Failed to login",
-                })
-            })
+        }
     }
 
     storageService.areValuesPresent(StoredKey.NODE_NPUB).then((isPresent) => {

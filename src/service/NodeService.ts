@@ -1,10 +1,13 @@
 import { StorageService, StoredKey } from "./StorageService"
 import { NostrEvent } from "../model/NostrEvent"
 import { verifyEvent } from "nostr-tools"
+import type {Filter} from "nostr-tools/lib/types/filter"
+import {NostrService} from "@service/NostrService"
 
 export class NodeService {
 
     private readonly storageService = new StorageService()
+    private readonly nostrService = new NostrService()
 
     async getNodeIdentity(nodeUrl: string) {
         const response = await fetch(nodeUrl + '/identity', {
@@ -47,6 +50,14 @@ export class NodeService {
         } else {
             throw 'Invalid node url'
         }
+    }
+
+    async queryEvent(filter: Filter) {
+        const nsec = await this.storageService.get(StoredKey.NSEC)
+
+        const event = this.nostrService.signNostrliveryEvent(nsec, "QUERY_EVENT", {filter})
+
+        return JSON.parse(await this.postEvent(event))
     }
 
 }
