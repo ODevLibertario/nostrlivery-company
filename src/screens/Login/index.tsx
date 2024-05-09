@@ -13,13 +13,15 @@ export const LoginScreen = ({ navigation }: any) => {
     const storageService = new StorageService()
 
     const authenticate = async () => {
+        await storageService.set(StoredKey.NSEC, nsecInput)
+
         const profile = await nodeService.queryEvent({kinds:[0], authors: [getPublicKey(nip19.decode(nsecInput).data as Uint8Array)]})
 
         if(!isEmpty(profile)){
-            storageService.set(StoredKey.PROFILE, profile).then()
-            storageService.set(StoredKey.NSEC, nsecInput).then()
+            await storageService.set(StoredKey.PROFILE, profile)
             navigation.navigate("Nostrlivery")
         } else {
+            await storageService.remove(StoredKey.NSEC)
             Toast.show({
                 type: "error",
                 text1: "Failed to login",

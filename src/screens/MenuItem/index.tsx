@@ -53,6 +53,7 @@ export const MenuItem = ({navigation}: any) => {
     }
 
     const cancel = async () => {
+        form.reset()
         navigation.navigate("Menu")
     }
 
