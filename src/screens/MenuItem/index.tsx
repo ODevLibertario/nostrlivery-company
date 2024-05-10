@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useEffect} from "react"
 import {View} from "react-native"
 import {ActionButton} from "@components/ActionButton"
 import {useForm} from "react-hook-form"
@@ -9,12 +9,43 @@ import {NostrService} from "@service/NostrService"
 import {NodeService} from "@service/NodeService"
 import {getPublicKey, nip19} from "nostr-tools"
 import {isEmpty} from "@util/validationUtils"
+import {useFocus} from "@util/navigationUtils"
 
 const storageService = new StorageService()
 const nostrService = new NostrService()
 const nodeService = new NodeService()
 
-export const MenuItem = ({navigation}: any) => {
+// TODO Create and apply a model for menuItem, today it's taking the form labels as object attributes which is ugly like 'IMAGE URL'should be imageUrl
+// TODO extract the logic out of the tsx file
+export const MenuItem = ({route, navigation}: any) => {
+    const {isNavigation} = useFocus()
+
+    function isUpdate() {
+        return route?.params?.index !== undefined
+    }
+
+    useEffect(() => {
+        // Is coming from navigation
+        if (isNavigation && isUpdate()) {
+
+            storageService.get(StoredKey.NSEC).then(nsec => {
+                nodeService.queryEvent({
+                    kinds: [30000],
+                    authors: [getPublicKey(nip19.decode(nsec).data as Uint8Array)]
+                }).then(menu => {
+                    const menuItem = menu[route.params.index]
+
+                    form.setValue("Name", menuItem["Name"])
+                    form.setValue("Description", menuItem["Description"])
+                    form.setValue("Price", menuItem["Price"])
+                    form.setValue("Image URL", menuItem["Image URL"])
+                    form.setValue("Categories", menuItem["Categories"])
+                    storageService.set(StoredKey.MENU, menu).then()
+                })
+            })
+        }
+    })
+
     const form = useForm()
 
     const addItem = async (menuItem: any) => {
@@ -40,6 +71,33 @@ export const MenuItem = ({navigation}: any) => {
             Toast.show({
                 type: "success",
                 text1: "Item added",
+            })
+            navigation.navigate("Menu")
+
+        } catch (e) {
+            Toast.show({
+                type: "error",
+                text1: "Error:" + JSON.stringify(e),
+            })
+            console.log(e)
+        }
+    }
+
+    const updateItem = async (menuItem: any) => {
+        const nsec = await storageService.get(StoredKey.NSEC)
+        const menu = await storageService.get(StoredKey.MENU)
+
+        menu[route.params.index] = menuItem
+
+        try {
+            const menuUpdateEvent = nostrService.signNostrEvent(nsec, 30000, [["n", "menu"]], menu)
+            const event = nostrService.signNostrliveryEvent(nsec, "PUBLISH_EVENT", {event: menuUpdateEvent})
+            await nodeService.postEvent(event)
+            await storageService.set(StoredKey.MENU, menu)
+            form.reset()
+            Toast.show({
+                type: "success",
+                text1: "Item updated",
             })
             navigation.navigate("Menu")
 
@@ -86,8 +144,7 @@ export const MenuItem = ({navigation}: any) => {
             rules={{minLength: 1, required: true, pattern: /(?:\s*\w+\s*(?:,\s*\w+\s*)*)?/}}
         />
 
-        {/* TODO what is the best way to do validation */}
-        <ActionButton title={"Save"} color={"purple"} onPress={form.handleSubmit(addItem)} customStyle={{margin: '2%'}}/>
+        <ActionButton title={isUpdate() ? "Update" : "Save"} color={"purple"} onPress={isUpdate() ? form.handleSubmit(updateItem) : form.handleSubmit(addItem)} customStyle={{margin: '2%'}}/>
         <ActionButton title={"Cancel"} color={"red"} onPress={cancel} customStyle={{margin: '2%'}}/>
     </View>
 }

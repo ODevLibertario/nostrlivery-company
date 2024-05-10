@@ -39,6 +39,7 @@ module.exports = {
         '@typescript-eslint/prefer-ts-expect-error': 'off',
         '@typescript-eslint/no-confusing-void-expression': 'off',
         '@typescript-eslint/dot-notation': 'warn',
+        '@typescript-eslint/promise-function-async': 'warn',
         'n/handle-callback-err': 'warn',
         '@typescript-eslint/require-array-sort-compare': ['error', {
             ignoreStringArrays: true
@@ -46,6 +47,7 @@ module.exports = {
         'react/jsx-curly-spacing': 'off',
         'eol-last': 'off',
         'no-multiple-empty-lines': 'error',
+        'no-return-assign':'warn',
         semi: ['error', 'never'],
         indent: ['error', 4],
         'react/jsx-indent': ['error', 4],

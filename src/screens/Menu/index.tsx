@@ -3,28 +3,28 @@ import {ActionButton} from "@components/ActionButton"
 import {Alert, Image, TouchableOpacity, View} from "react-native"
 import {StorageService, StoredKey} from "@service/StorageService"
 import {List} from "react-native-paper"
-import {useFocus} from "@util/navigationUtils";
-import {getPublicKey, nip19} from "nostr-tools";
-import {NodeService} from "@service/NodeService";
-import {NostrService} from "@service/NostrService";
-
+import {useFocus} from "@util/navigationUtils"
+import {getPublicKey, nip19} from "nostr-tools"
+import {NodeService} from "@service/NodeService"
+import {NostrService} from "@service/NostrService"
+import {groupBy} from "@util/arrayUtils"
 
 export const MenuScreen = ({navigation}: any) => {
     const storageService = new StorageService()
     const nostrService = new NostrService()
     const nodeService = new NodeService()
     const [menu, setMenu] = useState<any>([])
-    const {focusCount, isFocused} = useFocus();
-    const [, forceUpdate] = useReducer(x => x + 1, 0);
+    const {isNavigation} = useFocus()
+    const [, forceUpdate] = useReducer(x => x + 1, 0)
 
     const removeAlert = async (name: string, index: number) => {
-        Alert.alert('Remove Item', 'Are you sure you want to remove the item '+ name + '?', [
+        Alert.alert('Remove Item', 'Are you sure you want to remove the item ' + name + '?', [
             {
                 text: 'Cancel',
                 style: 'cancel',
             },
             {text: 'OK', onPress: () => remove(index)},
-        ]);
+        ])
     }
 
     const remove = async (index: number) => {
@@ -40,51 +40,59 @@ export const MenuScreen = ({navigation}: any) => {
         forceUpdate()
     }
 
-    const edit = async () => {
-        navigation.navigate("Menu")
+    const edit = async (index: number) => {
+        navigation.navigate("Menu Item", {index})
     }
 
-
     useEffect(() => {
-        const nsec = storageService.get(StoredKey.NSEC). then(nsec => {
+        const nsec = storageService.get(StoredKey.NSEC).then(nsec => {
             nodeService.queryEvent({
                 kinds: [30000],
                 authors: [getPublicKey(nip19.decode(nsec).data as Uint8Array)]
             }).then(menu => {
+                // TODO setting index here is bad, find a better way to set an id for the item
+                menu.forEach((i: any, index: number) => i.index = index)
                 setMenu(menu)
                 storageService.set(StoredKey.MENU, menu).then()
             })
         })
-    }, []);
+    }, [])
 
     useEffect(() => {
-        // Is coming from navigation
-        if (focusCount > 1 && isFocused) {
+        if (isNavigation) {
             storageService.get(StoredKey.MENU).then((menu) => {
+                // TODO setting index here is bad, find a better way to set an id for the item
+                menu.forEach((i: any, index: number) => i.index = index)
                 setMenu(menu)
             })
         }
-    });
+    })
+
+    const categories = groupBy(menu, "Categories")
 
     return (
         <View style={{margin: '2%'}}>
             {menu && <List.Section>
-                <List.Subheader>Category</List.Subheader>
-                {menu.map((i: any, index: number) =>
-                    <List.Item
-                        key={index}
-                        title={i["Name"] + " - " + i["Price"]} description={i["Description"]}
-                        left={() => <Image style={{width: 60, height: 60}} source={{uri: i["Image URL"]}}></Image>}
-                        right={() =>
-                            <>
-                                <TouchableOpacity style={{marginRight: '2%'}}>
-                                    <List.Icon icon="pencil"/>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => removeAlert(i["Name"], index)}>
-                                    <List.Icon icon="delete"/>
-                                </TouchableOpacity>
-                            </>}
-                    />
+                {Object.keys(categories).map((category: string) =>
+                    <>
+                        <List.Subheader>{category}</List.Subheader>
+                        {categories[category].map((i: any) =>
+                            <List.Item
+                                key={i.index}
+                                title={i["Name"] + " - " + i["Price"]} description={i["Description"]}
+                                left={() => <Image style={{width: 60, height: 60}} source={{uri: i["Image URL"]}}></Image>}
+                                right={() =>
+                                    <>
+                                        <TouchableOpacity style={{marginRight: '2%'}} onPress={() => edit(i.index)}>
+                                            <List.Icon icon="pencil"/>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => removeAlert(i["Name"], i.index)}>
+                                            <List.Icon icon="delete"/>
+                                        </TouchableOpacity>
+                                    </>}
+                            />
+                        )}
+                    </>
                 )}
             </List.Section>}
 
