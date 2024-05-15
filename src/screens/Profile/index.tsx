@@ -9,6 +9,7 @@ import { NodeService } from "@service/NodeService"
 import { NostrService } from "@service/NostrService"
 import { isValidLatitude, isValidLongitude } from "@util/validationUtils"
 import { getLocation } from "@util/geolocation"
+import {SelectInput} from "@components/SelectInput"
 
 export const ProfileScreen = ({ navigation }: any) => {
     const [profile, setProfile] = useState<any>({})
@@ -122,7 +123,31 @@ export const ProfileScreen = ({ navigation }: any) => {
                 text1: e,
             })
         })
+    }
 
+    function handleUpdateCurrency(currency: string) {
+        const profileWithCurrency = {...profile, currency: currency}
+
+        storageService.get(StoredKey.NSEC).then(async nsec => {
+            const profileUpdateEvent = nostrService.signNostrEvent(nsec, 0, [], profileWithCurrency)
+            const event = nostrService.signNostrliveryEvent(nsec, "PUBLISH_EVENT", {event: profileUpdateEvent})
+
+            try {
+                await nodeService.postEvent(event)
+                await storageService.set(StoredKey.PROFILE, profileWithCurrency)
+                Toast.show({
+                    type: "success",
+                    text1: "Currency updated",
+                })
+            } catch (e) {
+                console.log(e)
+            }
+        }).catch((e) => {
+            Toast.show({
+                type: "error",
+                text1: e,
+            })
+        })
     }
 
     function handleLogout() {
@@ -196,6 +221,19 @@ export const ProfileScreen = ({ navigation }: any) => {
                     title={"Update"}
                     color={"purple"}
                     onPress={handleUpdateLocation}
+                />
+            </View>
+            <View>
+                <Text style={{ fontSize: 16 }}>Currency</Text>
+                <SelectInput
+                    data={[
+                        {label: 'R$', value: 'BRL'},
+                        {label: '$', value: 'USD'},
+                        {label: 'BTC', value: 'BTC'},
+                        {label: '€', value: 'EUR'}
+                    ]}
+                    emptyMessage={"Select your currency"}
+                    callback={handleUpdateCurrency}
                 />
             </View>
             <View>

@@ -1,9 +1,10 @@
 import { useState } from "react"
-import { StyleSheet, Text, TextInput, View } from "react-native"
+import { StyleSheet, Text, View } from "react-native"
 import Toast from "react-native-toast-message"
 import { NodeService } from "@service/NodeService"
 import { StorageService, StoredKey } from "@service/StorageService"
 import { ActionButton } from "@components/ActionButton"
+import {SelectInput} from "@components/SelectInput"
 
 export const NodeSelectionScreen = ({ navigation }: any) => {
     const [nodeUrl, onChangeNodeUrl] = useState("")
@@ -37,11 +38,12 @@ export const NodeSelectionScreen = ({ navigation }: any) => {
             <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: "2%" }}>
                 Node Selection
             </Text>
-            <Text style={styles.label}>
-                Enter your Nostrlivery node URL with schema (http:// or https://)
-            </Text>
-            <TextInput style={styles.input} onChangeText={onChangeNodeUrl} />
-            <ActionButton title={"Enter"} color={"purple"} onPress={selectNode} />
+            <SelectInput
+                data={[{label: 'Localhost', value: 'http://localhost:3000'}]}
+                emptyMessage={"Select your node"}
+                callback={onChangeNodeUrl}>
+            </SelectInput>
+            <ActionButton title={"Enter"} color={"purple"} onPress={selectNode} customStyle={{marginTop: '5%'}} />
         </View>
     )
 }
