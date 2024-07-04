@@ -15,11 +15,11 @@ export const DriverListItem: React.FC<DriverListItemProps> = ({ driver }) => {
                     borderRadius: 40,
                     padding: 0
                 }} source={{
-                    uri: `https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg`
+                    uri: driver.profilePic
                 }}/>
             </View>
             <View>
-                <Text style={styles.driverDisplayName}>{driver.display_name}</Text>
+                <Text style={styles.driverDisplayName}>{driver.displayName}</Text>
                 <Text style={styles.driverName}>{driver.name}</Text>
             </View>
         </View>
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
         gap: 10,
         padding: 10,
         backgroundColor: '#ffffff',
-        borderRadius: 3,
+        borderRadius: 8,
     },
     profilePicContainer: {
         width: 80,

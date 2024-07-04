@@ -4,8 +4,9 @@ import { DriverListItem } from './DriverListItem'
 
 export interface IDriver {
   npub: string
-  display_name: string
-  name: string
+  displayName: string
+  name: string,
+  profilePic: string
 }
 
 interface DriverListProps {
