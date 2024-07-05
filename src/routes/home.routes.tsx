@@ -7,6 +7,7 @@ import { MenuScreen } from "../screens/Menu"
 import { ProfileScreen } from "../screens/Profile"
 import { MenuItem } from "../screens/MenuItem"
 import { DriversScreen } from "../screens/Drivers"
+import { DriverItem } from "../screens/Drivers/DriverItem"
 
 const { Navigator, Screen } = createBottomTabNavigator()
 
@@ -45,6 +46,9 @@ export function HomeRoutes() {
                     ),
                 }}
             />
+            <Screen name="Add new Driver" component={DriverItem} options={{
+                tabBarButton: () => null
+            }} />
             <Screen
                 name="Orders"
                 component={HomeScreen}

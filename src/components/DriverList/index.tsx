@@ -27,6 +27,5 @@ const style = StyleSheet.create({
     listContainer: {
         display: 'flex',
         gap: 10,
-        padding: 10,
     }
 })
