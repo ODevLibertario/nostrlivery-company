@@ -53,10 +53,12 @@ export class NodeService {
     }
 
     async queryEvent(filter: Filter) {
-        const nsec = await this.storageService.get(StoredKey.NSEC)
+        const nsec = await this.storageService.get<string>(StoredKey.NSEC)
         const event = this.nostrService.signNostrliveryEvent(nsec, "QUERY_EVENT", {filter})
 
-        return JSON.parse(await this.postEvent(event))
+        const data = await this.postEvent(event)
+        
+        return data
     }
 
 }
