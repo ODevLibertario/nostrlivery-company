@@ -16,7 +16,7 @@ export const DriverItem = ({navigation}: any) => {
     const nodeService = new NodeService()
 
     async function addDriver(driver: any) {
-        const nsec = await storageService.get(StoredKey.NSEC)
+        const nsec = await storageService.get<string>(StoredKey.NSEC)
         const driverNpub = driver['Driver NPub']
 
         const driverAssociationRequestEvent = nostrService.signNostrEvent(nsec, 20000, [], {

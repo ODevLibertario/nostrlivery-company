@@ -17,7 +17,7 @@ export class StorageService {
         })
     }
 
-    async get(key: StoredKey) {
+    async get<T = any>(key: StoredKey): Promise<T> {
         return await storage.load({
             key
         })

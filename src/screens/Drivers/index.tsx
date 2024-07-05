@@ -18,28 +18,25 @@ export const DriversScreen = ({navigation}: any) => {
                 console.log('Drivers fetched')
             })
             .catch((error) => {
-                Toast.show({
-                    type: 'error',
-                    text1: error.message,
-                })
+                console.log(error)
             })
     }, [])
 
     async function getDrivers() {
-        const nsec = await storageService.get(StoredKey.NSEC)
-        const driversNpubs = (await nodeService.queryEvent({
-            kinds: [30000],
+        const nsec = await storageService.get<string>(StoredKey.NSEC)
+        const event = (await nodeService.queryEvent({
+            kinds: [20000],
             authors: [getPublicKey(nip19.decode(nsec).data as Uint8Array)]
         }))
-            .map((event: any) => event.content?.driverNpub)
-        const list: IDriver[] = await Promise.all(driversNpubs.map(async (npub: string): Promise<IDriver> => {
-            return handleGetProfileFromNpub(npub)
-        }))
+        
+        if(event?.driverNpub) {
+            const driver = await handleGetProfileFromNpub(event.driverNpub)
 
-        setDrivers(list)
+            setDrivers([driver])
+        }
     }
 
-    async function handleGetProfileFromNpub(npub: string): IDriver {
+    async function handleGetProfileFromNpub(npub: string): Promise<IDriver> {
         const {type, data} = nip19.decode(npub)
 
         if(type === 'npub') {
