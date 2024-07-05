@@ -2,32 +2,44 @@ import React, { useEffect, useState } from 'react'
 import { View, Text, Button, StyleSheet } from 'react-native'
 import { DriverList, type IDriver } from '../../components/DriverList'
 import { NodeService } from '../../service/NodeService'
-import { nip19 } from 'nostr-tools'
+import { getPublicKey, nip19 } from 'nostr-tools'
 import { ActionButton } from '../../components/ActionButton'
 import { StorageService, StoredKey } from '../../service/StorageService'
-import { NostrService } from '../../service/NostrService'
+import Toast from 'react-native-toast-message'
 
 export const DriversScreen = ({navigation}: any) => {
     const [drivers, setDrivers] = useState<IDriver[]>([])
     const nodeService = new NodeService()
     const storageService = new StorageService()
-    const nostrService = new NostrService()
-
-    const driversNpubs = [
-        'npub1cpxjrlnhfmcclcsly5c0dvrgvl5nsctzxpp4s9f2nh4qeq50mwsq4089fc',
-        'npub1mh7g59qad8fsm7eq9ecq8v36lyef3ja5eyrmvevnwj2kx0jgchcqw42kwc'
-    ]
 
     useEffect(() => {
-        Promise.all(driversNpubs.map(async (npub): Promise<IDriver> => {
-            return await handleGetProfileFromNpub(npub)
-        }))
-            .then((result) => {
-                setDrivers(result)
+        getDrivers()
+            .then(() => {
+                console.log('Drivers fetched')
+            })
+            .catch((error) => {
+                Toast.show({
+                    type: 'error',
+                    text1: error.message,
+                })
             })
     }, [])
 
-    async function handleGetProfileFromNpub(npub: string) {
+    async function getDrivers() {
+        const nsec = await storageService.get(StoredKey.NSEC)
+        const driversNpubs = (await nodeService.queryEvent({
+            kinds: [30000],
+            authors: [getPublicKey(nip19.decode(nsec).data as Uint8Array)]
+        }))
+            .map((event: any) => event.content?.driverNpub)
+        const list: IDriver[] = await Promise.all(driversNpubs.map(async (npub: string): Promise<IDriver> => {
+            return handleGetProfileFromNpub(npub)
+        }))
+
+        setDrivers(list)
+    }
+
+    async function handleGetProfileFromNpub(npub: string): IDriver {
         const {type, data} = nip19.decode(npub)
 
         if(type === 'npub') {

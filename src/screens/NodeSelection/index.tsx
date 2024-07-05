@@ -39,7 +39,7 @@ export const NodeSelectionScreen = ({ navigation }: any) => {
                 Node Selection
             </Text>
             <SelectInput
-                data={[{label: 'Localhost', value: 'http://192.168.0.156:3000'}]}
+                data={[{label: 'Localhost', value: 'http://localhost:3000'}]}
                 emptyMessage={"Select your node"}
                 callback={onChangeNodeUrl}>
             </SelectInput>
